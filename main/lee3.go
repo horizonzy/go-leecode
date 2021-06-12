@@ -1,12 +1,5 @@
 package main
 
-import "fmt"
-
-func main() {
-	c := calcu("pwwkew")
-	fmt.Println(c)
-}
-
 func calcu(s string) int {
 	if len(s) == 0 {
 		return 00
