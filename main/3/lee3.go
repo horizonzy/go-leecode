@@ -1,43 +1,38 @@
 package main
 
-func calcu(s string) int {
-	if len(s) == 0 {
-		return 00
-	}
+import "fmt"
 
-	m := make(map[int32]int)
+func main() {
+	x := "abcbc"
+	size := lengthOfLongestSubstring(x)
+	fmt.Println(size)
+}
 
-	maxLength := -1
-	currentLeng := -1
+func lengthOfLongestSubstring(s string) int {
 
-	for index, value := range s {
+	size := len(s)
 
-		if maxLength == -1 {
-			maxLength = 1
-			currentLeng = 1
-			m[value] = index
-			continue
-		}
+	var result int
+	m := map[uint8]int{}
+	var l int
 
-		if beforeIndex, ok := m[value]; !ok {
-			if maxLength == currentLeng {
-				maxLength++
-				currentLeng++
-			} else {
-				currentLeng++
-			}
-			if currentLeng > maxLength {
-				maxLength = currentLeng
-			}
-			m[value] = index
+	for i := 0; i < size; i++ {
+		if v, ok := m[s[i]]; !ok {
+			m[s[i]] = i
 		} else {
-			c := s[beforeIndex+1 : index+1]
-			m = map[int32]int{}
-			currentLeng = index - beforeIndex
-			for i, v := range c {
-				m[v] = i + beforeIndex + 1
+			if i-l > result {
+				result = i - l
 			}
+			for j := l; j < v; j++ {
+				delete(m, s[j])
+			}
+			m[s[i]] = i
+			l = v + 1
 		}
 	}
-	return maxLength
+	if size-l > result {
+		result = size - l
+	}
+
+	return result
 }
