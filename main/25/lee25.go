@@ -1,11 +1,7 @@
-package _5
+package main
 
 import "fmt"
 
-/**
- * Definition for singly-linked list.
-*
-*/
 type ListNode struct {
 	Val  int
 	Next *ListNode
@@ -23,92 +19,55 @@ func main() {
 	node3.Next = node4
 	node4.Next = node5
 
-	resutl := reverseKGroup(node1, 2)
-	println(resutl)
-
-}
-
-func print(head *ListNode) {
-	currentNode := head
-	for {
-		if currentNode.Next == nil {
-			fmt.Println(currentNode.Val)
-			break
-		}
-		fmt.Println(currentNode.Val)
-		currentNode = currentNode.Next
+	resutl := reverseKGroup(node1, 3)
+	for resutl != nil {
+		fmt.Printf("%d ", resutl.Val)
+		resutl = resutl.Next
 	}
+
 }
 
 func reverseKGroup(head *ListNode, k int) *ListNode {
-	if k == 1 {
-		return head
-	}
-	tmp := []*ListNode{}
+	result := head
+	var first = true
 
-	var result *ListNode
-	var beforeLast *ListNode
-	currentNode := head
-	i := 0
+	var last *ListNode
+	var prelast *ListNode
 
-	for {
-		if currentNode.Next == nil {
-			i++
-			tmp = append(tmp, currentNode)
-			if i == k {
-				start, last := reverse(tmp)
-				if result == nil {
-					result = start
-				}
-				if beforeLast != nil {
-					beforeLast.Next = start
-				}
-				beforeLast = last
-
-				tmp = []*ListNode{}
-				i = 0
-			} else {
-				if beforeLast == nil {
-					result = tmp[0]
-				} else {
-					beforeLast.Next = tmp[0]
-				}
-			}
-			break
+	var prev *ListNode
+	var i int
+	for head != nil {
+		if i == 0 {
+			last = head
 		}
-		tmp = append(tmp, currentNode)
-		currentNode = currentNode.Next
 		i++
+		tmp := head.Next
+		head.Next = prev
 		if i == k {
-			start, last := reverse(tmp)
-			if result == nil {
-				result = start
+			if first {
+				result = head
+				first = false
 			}
-
-			if beforeLast != nil {
-				beforeLast.Next = start
+			if prelast != nil {
+				prelast.Next = head
 			}
-			beforeLast = last
-			tmp = []*ListNode{}
+			prelast = last
+			prev = nil
 			i = 0
+		} else {
+			if tmp == nil {
+				var pre *ListNode
+				for head != nil {
+					tmp1 := head.Next
+					head.Next = pre
+					pre = head
+					head = tmp1
+				}
+				prelast.Next = pre
+			}
+			prev = head
 		}
+		head = tmp
 	}
 	return result
-}
-
-func reverse(list []*ListNode) (*ListNode, *ListNode) {
-	var result *ListNode
-	var last *ListNode
-	for i := len(list) - 1; i >= 0; i-- {
-		if i == 0 {
-			list[i].Next = nil
-			last = list[i]
-		} else {
-			if result == nil {
-				result = list[i]
-			}
-			list[i].Next = list[i-1]
-		}
-	}
-	return result, last
 }
