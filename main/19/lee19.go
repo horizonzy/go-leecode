@@ -26,21 +26,23 @@ func main() {
 
 func removeNthFromEnd(head *ListNode, n int) *ListNode {
 	first := head
-	slow := head
 	var preSlow *ListNode
 	var index int
 	for head != nil {
 		index++
 		head = head.Next
 		if index > n {
-			preSlow = slow
-			slow = slow.Next
+			if preSlow == nil {
+				preSlow = first
+			} else {
+				preSlow = preSlow.Next
+			}
 		}
 	}
 	if preSlow == nil {
 		first = first.Next
 		return first
 	}
-	preSlow.Next = slow.Next
+	preSlow.Next = preSlow.Next.Next
 	return first
 }
