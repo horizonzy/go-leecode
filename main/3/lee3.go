@@ -9,30 +9,29 @@ func main() {
 }
 
 func lengthOfLongestSubstring(s string) int {
-
-	size := len(s)
-
-	var result int
-	m := map[uint8]int{}
+	var max int
+	var indexMap = make(map[uint8]int)
 	var l int
-
-	for i := 0; i < size; i++ {
-		if v, ok := m[s[i]]; !ok {
-			m[s[i]] = i
-		} else {
-			if i-l > result {
-				result = i - l
+	for i := range s {
+		sign := s[i]
+		v, ok := indexMap[sign]
+		if ok {
+			len := len(indexMap)
+			if len > max {
+				max = len
 			}
 			for j := l; j < v; j++ {
-				delete(m, s[j])
+				delete(indexMap, s[j])
 			}
-			m[s[i]] = i
+			indexMap[sign] = i
 			l = v + 1
+		} else {
+			indexMap[sign] = i
 		}
 	}
-	if size-l > result {
-		result = size - l
+	len := len(indexMap)
+	if len > max {
+		max = len
 	}
-
-	return result
+	return max
 }
