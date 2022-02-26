@@ -9,35 +9,38 @@ func main() {
 }
 
 func findKthLargest(nums []int, k int) int {
-	heapSize := len(nums)
-	buildMaxHeap(nums, heapSize)
+	buildMaxHeap(nums)
+	heapSize := len(nums) - 1
 	for i := 0; i < k-1; i++ {
-		nums[0], nums[heapSize-1] = nums[heapSize-1], nums[0]
+		nums[0], nums[heapSize] = nums[heapSize], nums[0]
 		heapSize--
 		heapify(nums, 0, heapSize)
 	}
 	return nums[0]
 }
 
-func buildMaxHeap(a []int, size int) {
-	for i := size / 2; i >= 0; i-- {
-		heapify(a, i, size)
+func buildMaxHeap(nums []int) {
+	len := len(nums)
+	for i := len / 2; i >= 0; i-- {
+		heapify(nums, i, len)
 	}
 }
 
-func heapify(a []int, i, size int) {
-	l := i*2 + 1
-	r := i*2 + 2
+func heapify(nums []int, i, size int) {
+	l := 2*i + 1
+	r := 2*i + 2
+
 	largest := i
 
-	if l < size && a[l] > a[largest] {
+	if l < size && nums[l] > nums[largest] {
 		largest = l
 	}
-	if r < size && a[r] > a[largest] {
+	if r < size && nums[r] > nums[largest] {
 		largest = r
 	}
 	if largest != i {
-		a[i], a[largest] = a[largest], a[i]
-		heapify(a, largest, size)
+		nums[largest], nums[i] = nums[i], nums[largest]
+		heapify(nums, largest, size)
 	}
+
 }
