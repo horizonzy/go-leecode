@@ -30,32 +30,35 @@ func levelOrder(root *TreeNode) [][]int {
 	}
 
 	var result [][]int
-	var level int
+	var leveMap = make(map[*TreeNode]int)
 	var queue []*TreeNode
-	levelSize := make(map[int]int)
-	levelSize[0] = 1
 	queue = append(queue, root)
-	for len(queue) > 0 {
-		size := levelSize[level]
-		var currentSize int
-		var childResult []int
-		for i := 0; i < size; i++ {
-			tmp := queue[0]
-			childResult = append(childResult, tmp.Val)
-			queue = queue[1:]
-			if tmp.Left != nil {
-				currentSize++
-				queue = append(queue, tmp.Left)
-			}
-			if tmp.Right != nil {
-				currentSize++
-				queue = append(queue, tmp.Right)
-			}
+	leveMap[root] = 0
+	i := 0
+	var tmp []int
+	for len(queue) != 0 {
+		current := queue[0]
+		currentLevel := leveMap[current]
+		queue = queue[1:]
+		if current.Left != nil {
+			leveMap[current.Left] = currentLevel + 1
+			queue = append(queue, current.Left)
 		}
-		result = append(result, childResult)
-		level++
-		levelSize[level] = currentSize
+		if current.Right != nil {
+			leveMap[current.Right] = currentLevel + 1
+			queue = append(queue, current.Right)
+		}
+		if currentLevel == i {
+			tmp = append(tmp, current.Val)
+		}
+		if currentLevel > i {
+			i = currentLevel
+			result = append(result, tmp)
+			tmp = []int{}
+			tmp = append(tmp, current.Val)
+		}
 	}
+	result = append(result, tmp)
 	return result
 }
 
