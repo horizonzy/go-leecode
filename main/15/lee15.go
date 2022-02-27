@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	input := []int{-1, 0, 1, 2, -1, -4, -2, -3, 3, 0, 4}
+	input := []int{0, 0, 0, 0}
 
 	sum := threeSum(input)
 
@@ -19,30 +19,38 @@ func main() {
 }
 
 func threeSum(nums []int) [][]int {
-	sort.Ints(nums)
 	var result [][]int
-	size := len(nums)
+	sort.Ints(nums)
 
-	for i := 0; i < size-2; i++ {
+	len := len(nums)
+
+	for i := 0; i < len-2; i++ {
 		if i > 0 && nums[i] == nums[i-1] {
 			continue
 		}
-		r := size - 1
-		target := -1 * nums[i]
-		for j := i + 1; j < size-1; j++ {
+		if nums[i]+nums[i+1]+nums[i+2] > 0 {
+			break
+		}
+		r := len - 1
+		for j := i + 1; j < len-1; j++ {
 			if j > i+1 && nums[j] == nums[j-1] {
 				continue
 			}
-
-			for r > j && nums[r]+nums[j] > target {
-				r--
-			}
-			if j == r {
+			if nums[i]+nums[j]+nums[j+1] > 0 {
 				break
 			}
-
-			if nums[r]+nums[j] == target {
-				result = append(result, []int{nums[i], nums[j], nums[r]})
+			c := r
+			for k := c; k > j; k-- {
+				if k < c && nums[k] == nums[k+1] {
+					continue
+				}
+				if nums[i]+nums[j]+nums[k] < 0 {
+					break
+				}
+				if nums[i]+nums[j]+nums[k] == 0 {
+					result = append(result, []int{nums[i], nums[j], nums[k]})
+					r = k - 1
+				}
 			}
 		}
 	}
