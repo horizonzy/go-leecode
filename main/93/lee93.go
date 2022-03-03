@@ -3,44 +3,50 @@ package main
 import (
 	"fmt"
 	"strconv"
-	"strings"
 )
 
 func main() {
-	restoreIpAddresses("1012322102")
+	result := restoreIpAddresses("0000")
+	for i := range result {
+		fmt.Println(result[i])
+	}
 }
+
+var total []string
 
 func restoreIpAddresses(s string) []string {
-	len := len(s)
-	var result []string
-	for i := 1; i < 4; i++ {
-		for j := 1; j < 4; j++ {
-			for k := 1; k < 4; k++ {
-				if i+j+k >= len {
-					continue
-				}
-				s1 := s[:i]
-				s2 := s[i : i+j]
-				s3 := s[i+j : i+j+k]
-				s4 := s[i+j+k:]
-				if checkStrValid(s1) && checkStrValid(s2) && checkStrValid(s3) && checkStrValid(s4) {
-					result = append(result, fmt.Sprintf("%s.%s.%s.%s", s1, s2, s3, s4))
-				}
-			}
-		}
+	if s == "" {
+		return nil
 	}
-	return result
+	total = []string{}
+	backtrack(0, 0, "", s)
+	return total
 }
 
-func checkStrValid(s string) bool {
-	if len(s) == 0 {
-		return false
+func backtrack(start, level int, current string, source string) {
+	if level == 4 {
+		if start == len(source) {
+			total = append(total, current)
+		}
+		return
 	}
-	if len(s) > 1 && strings.HasPrefix(s, "0") {
-		return false
+
+	for i := 1; i <= 3; i++ {
+		if start+i > len(source) {
+			break
+		}
+
+		child := source[start : start+i]
+		if len(child) > 1 && child[0] == '0' {
+			break
+		}
+		if v, _ := strconv.Atoi(child); v > 255 {
+			continue
+		}
+		if len(current) == 0 {
+			backtrack(start+i, level+1, child, source)
+		} else {
+			backtrack(start+i, level+1, current+"."+child, source)
+		}
 	}
-	if v, _ := strconv.Atoi(s); v > 255 {
-		return false
-	}
-	return true
 }
