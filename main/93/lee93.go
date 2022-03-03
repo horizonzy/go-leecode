@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	result := restoreIpAddresses("0000")
+	result := restoreIpAddresses("25525511135")
 	for i := range result {
 		fmt.Println(result[i])
 	}
@@ -35,13 +35,12 @@ func backtrack(start, level int, current string, source string) {
 		if start+i > len(source) {
 			break
 		}
-
 		child := source[start : start+i]
 		if len(child) > 1 && child[0] == '0' {
 			break
 		}
-		if v, _ := strconv.Atoi(child); v > 255 {
-			continue
+		if v, err := strconv.Atoi(child); err != nil || v > 255 {
+			break
 		}
 		if len(current) == 0 {
 			backtrack(start+i, level+1, child, source)
