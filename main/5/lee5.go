@@ -1,12 +1,12 @@
 package main
 
 func main() {
-	c := longestPalindrome("cbbd")
+	c := longestPalindrome("aaaa")
 	println(c)
 }
 
 func longestPalindrome(s string) string {
-	//dp[i,j] = dp[i+1,j-1]&& (s[i]==s[j])
+	//dp[i][j] = dp[i+1][j-1] && (s[i]==s[j])
 	len := len(s)
 	var dp = make([][]bool, len)
 
@@ -16,18 +16,16 @@ func longestPalindrome(s string) string {
 	for i := 0; i < len; i++ {
 		dp[i] = make([]bool, len)
 		dp[i][i] = true
-
 	}
 
 	for L := 1; L < len; L++ {
-
 		for i := 0; i < len; i++ {
 			j := i + L
-			if j > len-1 {
+			if j >= len {
 				break
 			}
 			if s[i] == s[j] {
-				if j-i < 3 {
+				if j-i == 1 {
 					dp[i][j] = true
 				} else {
 					dp[i][j] = dp[i+1][j-1]
@@ -41,5 +39,6 @@ func longestPalindrome(s string) string {
 			}
 		}
 	}
+
 	return s[start : start+maxLen+1]
 }
