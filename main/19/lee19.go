@@ -10,14 +10,14 @@ type ListNode struct {
 func main() {
 	a := &ListNode{Val: 1}
 	b := &ListNode{Val: 2}
-	c := &ListNode{Val: 3}
-	d := &ListNode{Val: 4}
-	e := &ListNode{Val: 5}
+	//c := &ListNode{Val: 3}
+	//d := &ListNode{Val: 4}
+	//e := &ListNode{Val: 5}
 	a.Next = b
-	b.Next = c
-	c.Next = d
-	d.Next = e
-	result := removeNthFromEnd(a, 2)
+	//b.Next = c
+	//c.Next = d
+	//d.Next = e
+	result := removeNthFromEnd(a, 1)
 	for result != nil {
 		fmt.Printf("%d ", result.Val)
 		result = result.Next
@@ -25,24 +25,22 @@ func main() {
 }
 
 func removeNthFromEnd(head *ListNode, n int) *ListNode {
-	first := head
-	var preSlow *ListNode
+	result := head
+	var pre *ListNode
+	var slow = head
 	var index int
 	for head != nil {
+		if index > n-1 {
+			pre = slow
+			slow = slow.Next
+		}
 		index++
 		head = head.Next
-		if index > n {
-			if preSlow == nil {
-				preSlow = first
-			} else {
-				preSlow = preSlow.Next
-			}
-		}
 	}
-	if preSlow == nil {
-		first = first.Next
-		return first
+	if pre != nil {
+		pre.Next = slow.Next
+	} else {
+		result = result.Next
 	}
-	preSlow.Next = preSlow.Next.Next
-	return first
+	return result
 }
