@@ -6,9 +6,10 @@ func main() {
 }
 
 func uniquePaths(m int, n int) int {
+	//dp[i][j] = dp[i-1][j] + dp[i][j-1]
+
 	var dp = make([][]int, m)
 
-	//dp[i][j] = dp[i-1][j] + dp[i][j-1]
 	for i := 0; i < m; i++ {
 		dp[i] = make([]int, n)
 		dp[i][0] = 1
