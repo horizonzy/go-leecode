@@ -10,37 +10,38 @@ func main() {
 
 func findKthLargest(nums []int, k int) int {
 	buildMaxHeap(nums)
-	heapSize := len(nums) - 1
+	size := len(nums) - 1
 	for i := 0; i < k-1; i++ {
-		nums[0], nums[heapSize] = nums[heapSize], nums[0]
-		heapSize--
-		heapify(nums, 0, heapSize)
+		nums[0], nums[size] = nums[size], nums[0]
+		size--
+		heapify(nums, 0, size)
 	}
 	return nums[0]
 }
 
 func buildMaxHeap(nums []int) {
 	len := len(nums)
+
 	for i := len / 2; i >= 0; i-- {
 		heapify(nums, i, len)
 	}
 }
 
 func heapify(nums []int, i, size int) {
-	l := 2*i + 1
-	r := 2*i + 2
+	l := i*2 + 1
+	r := l + 1
+	var max = i
 
-	largest := i
-
-	if l < size && nums[l] > nums[largest] {
-		largest = l
-	}
-	if r < size && nums[r] > nums[largest] {
-		largest = r
-	}
-	if largest != i {
-		nums[largest], nums[i] = nums[i], nums[largest]
-		heapify(nums, largest, size)
+	if l < size && nums[l] > nums[max] {
+		max = l
 	}
 
+	if r < size && nums[r] > nums[max] {
+		max = r
+	}
+
+	if max != i {
+		nums[i], nums[max] = nums[max], nums[i]
+		heapify(nums, max, size)
+	}
 }
