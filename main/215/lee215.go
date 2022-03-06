@@ -9,39 +9,41 @@ func main() {
 }
 
 func findKthLargest(nums []int, k int) int {
-	buildMaxHeap(nums)
-	size := len(nums) - 1
-	for i := 0; i < k-1; i++ {
-		nums[0], nums[size] = nums[size], nums[0]
-		size--
-		heapify(nums, 0, size)
-	}
-	return nums[0]
+	quicksort(nums, 0, len(nums)-1)
+	return nums[len(nums)-k]
 }
 
-func buildMaxHeap(nums []int) {
-	len := len(nums)
-
-	for i := len / 2; i >= 0; i-- {
-		heapify(nums, i, len)
-	}
-}
-
-func heapify(nums []int, i, size int) {
-	l := i*2 + 1
-	r := l + 1
-	var max = i
-
-	if l < size && nums[l] > nums[max] {
-		max = l
+func quicksort(nums []int, l, r int) {
+	if l > r {
+		return
 	}
 
-	if r < size && nums[r] > nums[max] {
-		max = r
-	}
+	base := nums[l]
+	i := l
+	j := r
 
-	if max != i {
-		nums[i], nums[max] = nums[max], nums[i]
-		heapify(nums, max, size)
+	for i < j {
+		for i < j {
+			if nums[j] <= base {
+				nums[i] = nums[j]
+				i++
+				break
+			} else {
+				j--
+			}
+		}
+
+		for i < j {
+			if nums[i] >= base {
+				nums[j] = nums[i]
+				j--
+				break
+			} else {
+				i++
+			}
+		}
 	}
+	nums[i] = base
+	quicksort(nums, l, i-1)
+	quicksort(nums, i+1, r)
 }
