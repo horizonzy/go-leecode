@@ -30,74 +30,34 @@ func levelOrder(root *TreeNode) [][]int {
 	}
 
 	var result [][]int
-	var leveMap = make(map[*TreeNode]int)
-	var queue []*TreeNode
-	queue = append(queue, root)
-	leveMap[root] = 0
-	i := 0
-	var tmp []int
+
+	result = append(result, []int{root.Val})
+
+	var queue = []*TreeNode{root}
+
+	var tmp []*TreeNode
+	var tmpResult []int
+
 	for len(queue) != 0 {
 		current := queue[0]
-		currentLevel := leveMap[current]
 		queue = queue[1:]
+
 		if current.Left != nil {
-			leveMap[current.Left] = currentLevel + 1
-			queue = append(queue, current.Left)
+			tmp = append(tmp, current.Left)
+			tmpResult = append(tmpResult, current.Left.Val)
 		}
+
 		if current.Right != nil {
-			leveMap[current.Right] = currentLevel + 1
-			queue = append(queue, current.Right)
+			tmp = append(tmp, current.Right)
+			tmpResult = append(tmpResult, current.Right.Val)
 		}
-		if currentLevel == i {
-			tmp = append(tmp, current.Val)
-		}
-		if currentLevel > i {
-			i = currentLevel
-			result = append(result, tmp)
-			tmp = []int{}
-			tmp = append(tmp, current.Val)
+
+		if len(queue) == 0 && len(tmp) > 0 {
+			queue = append(queue, tmp...)
+			result = append(result, tmpResult)
+			tmp = []*TreeNode{}
+			tmpResult = []int{}
 		}
 	}
-	result = append(result, tmp)
 	return result
 }
-
-//func levelOrder(root *TreeNode) [][]int {
-//	var result []*[]int
-//
-//	if root == nil {
-//		return [][]int{}
-//	}
-//	base := &[]int{root.Val}
-//	result = append(result, base)
-//
-//	transfer(root, 1, &result)
-//
-//	var x [][]int
-//	for i := range result {
-//		if len(*result[i]) != 0 {
-//			x = append(x, *result[i])
-//		}
-//	}
-//	return x
-//}
-//
-//func transfer(root *TreeNode, level int, array *[]*[]int) {
-//	var current *[]int
-//
-//	if len(*array) > level {
-//		current = (*array)[level]
-//	} else {
-//		current = &[]int{}
-//		*array = append(*array, current)
-//	}
-//
-//	if root.Left != nil {
-//		*current = append(*current, root.Left.Val)
-//		transfer(root.Left, level+1, array)
-//	}
-//	if root.Right != nil {
-//		*current = append(*current, root.Right.Val)
-//		transfer(root.Right, level+1, array)
-//	}
-//}
